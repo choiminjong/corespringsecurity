@@ -1,6 +1,7 @@
 package io.corespringsecurity.security.configs;
 
 import io.corespringsecurity.security.common.FormWebAuthenticationDetailsSource;
+import io.corespringsecurity.security.handler.CustomAuthenticationFailureHandler;
 import io.corespringsecurity.security.handler.CustomAuthenticationSuccessHandler;
 import io.corespringsecurity.security.provider.CustomAuthenticationProvider;
 import io.corespringsecurity.security.provider.FormAuthenticationProvider;
@@ -30,7 +31,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private FormWebAuthenticationDetailsSource formWebAuthenticationDetailsSource;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,18 +49,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    }
-
-    @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
                 .antMatchers("/mypage").hasRole("USER")
                 .antMatchers("/messages").hasRole("MANAGER")
                 .antMatchers("/config").hasRole("ADMIN")
-                .antMatchers("/**").permitAll()
+                .antMatchers("/","/users","user/login/**","/login").permitAll()
                 .anyRequest().authenticated()
 
        .and()
@@ -64,8 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/")
                 .authenticationDetailsSource(formWebAuthenticationDetailsSource)
                 .successHandler(customAuthenticationSuccessHandler)
+                .failureHandler(customAuthenticationFailureHandler)
                 .permitAll();
-
     }
-
 }
