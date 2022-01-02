@@ -9,18 +9,21 @@ import org.springframework.security.authentication.InsufficientAuthenticationExc
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class CustomAuthenticationProvider implements AuthenticationProvider {
+import javax.transaction.Transactional;
+
+public class FormAuthenticationProvider implements AuthenticationProvider {
+
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
+
     @Override
+    @Transactional
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
         String username = authentication.getName();
@@ -28,18 +31,20 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         AccountContext accountContext =(AccountContext)userDetailsService.loadUserByUsername(username);
 
-        if(!passwordEncoder.matches(password, accountContext.getAccount().getPassword())){
-            throw new BadCredentialsException("BadCredentialsException");
+        if (!passwordEncoder.matches(password, accountContext.getPassword())) {
+            throw new BadCredentialsException("Invalid password");
         }
 
-        String secretKey = ((FormWebAuthenticationDetails) authentication.getDetails()).getSecretKey();
+        FormWebAuthenticationDetails formWebAuthenticationDetails = (FormWebAuthenticationDetails) authentication.getDetails();
+        String secretKey = formWebAuthenticationDetails.getSecretKey();
+
         if (secretKey == null || !secretKey.equals("secret")) {
             throw new InsufficientAuthenticationException("Invalid Secret");
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountContext.getAccount(), null,accountContext.getAuthorities());
 
-        return authenticationToken;
+        return  authenticationToken;
     }
 
     @Override
