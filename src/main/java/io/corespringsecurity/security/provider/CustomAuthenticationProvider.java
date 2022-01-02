@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class CustomAuthenticationProvider implements AuthenticationProvider {
+
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -29,6 +30,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         AccountContext accountContext =(AccountContext)userDetailsService.loadUserByUsername(username);
 
         if(!passwordEncoder.matches(password, accountContext.getAccount().getPassword())){
+            System.out.println("BadCredentialsException");
             throw new BadCredentialsException("BadCredentialsException");
         }
 

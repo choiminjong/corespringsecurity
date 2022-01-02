@@ -19,9 +19,9 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
     private PasswordEncoder passwordEncoder;
-
-
+    
     @Override
     @Transactional
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
