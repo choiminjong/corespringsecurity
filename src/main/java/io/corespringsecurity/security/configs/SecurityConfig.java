@@ -84,16 +84,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return customAccessDeniedHandler;
     }
 
-    //패스워드 암호화
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-    //화면에서 입력한 로그인 정보와 DB에서 가져온 사용자의 정보를 비교해주는 인터페이스
     @Bean
     public AuthenticationProvider authenticationProvider(){
         return new CustomAuthenticationProvider();
     }
+
+    //패스워드 암호화
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
+
+
+    //화면에서 입력한 로그인 정보와 DB에서 가져온 사용자의 정보를 비교해주는 인터페이스
+//    @Bean
+//    public AuthenticationProvider authenticationProvider(){
+//        return new CustomAuthenticationProvider(passwordEncoder());
+//    }
+//
 
 }
