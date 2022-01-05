@@ -4,7 +4,7 @@ Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 
 {
-  "username": "user",
+  "username": "user2",
   "password": "1111"
 }
 

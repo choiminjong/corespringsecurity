@@ -25,12 +25,13 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         setDefaultTargetUrl("/");
 
-        SavedRequest savedRequest = requestCache.getRequest(request,response);
-        if(savedRequest != null){
-            String targerUrl = savedRequest.getRedirectUrl();
-            redirectStrategy.sendRedirect(request,response,targerUrl);
-        }else{
-            redirectStrategy.sendRedirect(request,response,getDefaultTargetUrl());
+        SavedRequest savedRequest = requestCache.getRequest(request, response);
+
+        if(savedRequest!=null) {
+            String targetUrl = savedRequest.getRedirectUrl();
+            redirectStrategy.sendRedirect(request, response, targetUrl);
+        } else {
+            redirectStrategy.sendRedirect(request, response, getDefaultTargetUrl());
         }
     }
 }
