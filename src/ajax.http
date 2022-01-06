@@ -11,7 +11,7 @@ X-Requested-With: XMLHttpRequest
 ###
 
 ### Send POST request with body as parameters
-POST http://localhost:8080/api/messages
+GET http://localhost:8080/api/messages
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 
@@ -23,7 +23,7 @@ X-Requested-With: XMLHttpRequest
 ###
 
 ### Send POST request with body as parameters
-POST http://localhost:8080/api/messages
+GET http://localhost:8080/api/messages
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 

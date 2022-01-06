@@ -16,6 +16,9 @@ import java.io.IOException;
 
 public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
+    private static final String XML_HTTP_REQUEST = "XMLHttpRequest";
+    private static final String X_REQUESTED_WITH = "X-Requested-With";
+
     //json 데이터를 받을때 사용
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -36,7 +39,7 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
 
         //json 데이터를 받아서 AccountDto 매핑한다.
         AccountDto accountDto = objectMapper.readValue(request.getReader(), AccountDto.class);
-        System.out.println("accountDto== "+ accountDto);
+
         //null 데이터 체크
         if(accountDto.getUsername().isBlank() || accountDto.getPassword().isBlank() ){
             throw new IllegalArgumentException("Username or Passoword is empty");
@@ -48,6 +51,6 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
     }
 
     public static boolean isAjax(HttpServletRequest request) {
-        return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+        return XML_HTTP_REQUEST.equals(request.getHeader(X_REQUESTED_WITH));
     }
 }
