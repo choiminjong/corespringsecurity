@@ -1,6 +1,6 @@
 package io.corespringsecurity.repository;
 
-import io.corespringsecurity.domain.Account;
+import io.corespringsecurity.domain.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<Account, Long> {

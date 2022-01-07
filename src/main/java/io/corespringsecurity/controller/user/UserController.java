@@ -1,6 +1,6 @@
 package io.corespringsecurity.controller.user;
 
-import io.corespringsecurity.domain.Account;
+import io.corespringsecurity.domain.entity.Account;
 import io.corespringsecurity.domain.AccountDto;
 import io.corespringsecurity.service.UserService;
 import org.modelmapper.ModelMapper;

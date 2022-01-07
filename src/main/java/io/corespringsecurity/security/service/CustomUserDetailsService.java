@@ -1,6 +1,6 @@
 package io.corespringsecurity.security.service;
 
-import io.corespringsecurity.domain.Account;
+import io.corespringsecurity.domain.entity.Account;
 import io.corespringsecurity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

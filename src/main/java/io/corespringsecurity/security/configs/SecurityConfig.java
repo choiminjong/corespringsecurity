@@ -1,6 +1,7 @@
 package io.corespringsecurity.security.configs;
 
 import io.corespringsecurity.security.common.FormWebAuthenticationDetailsSource;
+import io.corespringsecurity.security.factory.UrlResourcesMapFactoryBean;
 import io.corespringsecurity.security.filter.AjaxLoginProcessingFilter;
 import io.corespringsecurity.security.handler.CustomAccessDeniedHandler;
 import io.corespringsecurity.security.handler.CustomAuthenticationFailureHandler;
@@ -8,6 +9,7 @@ import io.corespringsecurity.security.handler.CustomAuthenticationSuccessHandler
 import io.corespringsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import io.corespringsecurity.security.provider.CustomAuthenticationProvider;
 import io.corespringsecurity.security.provider.FormAuthenticationProvider;
+import io.corespringsecurity.service.SecurityResourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -37,6 +39,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Configuration
 @EnableWebSecurity
@@ -51,6 +54,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+
+    @Autowired
+    private SecurityResourceService securityResourceService;
+
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -135,10 +142,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public FilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource() {
-        return new UrlFilterInvocationSecurityMetadataSource();
+    public FilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource() throws Exception {
+        return new UrlFilterInvocationSecurityMetadataSource(urlResourcesMapFactoryBean().getObject());
+
     }
 
+    private UrlResourcesMapFactoryBean urlResourcesMapFactoryBean() {
+        UrlResourcesMapFactoryBean urlResourcesMapFactoryBean = new UrlResourcesMapFactoryBean();
+        urlResourcesMapFactoryBean.setSecurityResourceService(securityResourceService);
 
+        return urlResourcesMapFactoryBean;
+    }
 
 }

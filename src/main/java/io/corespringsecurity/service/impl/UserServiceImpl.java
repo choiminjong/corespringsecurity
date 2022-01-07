@@ -1,6 +1,6 @@
 package io.corespringsecurity.service.impl;
 
-import io.corespringsecurity.domain.Account;
+import io.corespringsecurity.domain.entity.Account;
 import io.corespringsecurity.repository.UserRepository;
 import io.corespringsecurity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
