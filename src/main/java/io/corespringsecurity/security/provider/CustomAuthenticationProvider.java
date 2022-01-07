@@ -21,6 +21,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public CustomAuthenticationProvider(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
 //    public CustomAuthenticationProvider(PasswordEncoder passwordEncoder) {
 //        this.passwordEncoder = passwordEncoder;
 //    }

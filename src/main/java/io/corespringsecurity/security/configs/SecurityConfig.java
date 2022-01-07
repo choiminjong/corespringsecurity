@@ -7,6 +7,7 @@ import io.corespringsecurity.security.handler.CustomAuthenticationFailureHandler
 import io.corespringsecurity.security.handler.CustomAuthenticationSuccessHandler;
 import io.corespringsecurity.security.provider.CustomAuthenticationProvider;
 import io.corespringsecurity.security.provider.FormAuthenticationProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +30,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@Order(1)
+@Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -44,6 +45,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
     }
 
     @Override
@@ -78,22 +84,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        return new CustomAuthenticationProvider(passwordEncoder());
+    }
+
+    @Bean
     public AccessDeniedHandler accessDeniedHandler(){
         CustomAccessDeniedHandler customAccessDeniedHandler = new CustomAccessDeniedHandler();
         customAccessDeniedHandler.setErrorPage("/denied");
         return customAccessDeniedHandler;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        return new CustomAuthenticationProvider();
-    }
 
     //패스워드 암호화
 //    @Bean
