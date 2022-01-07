@@ -73,8 +73,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")) //인증되지 않았을 때의 동작을
                 .accessDeniedPage("/denied")
-                .accessDeniedHandler(accessDeniedHandler())
-        ;
+                .accessDeniedHandler(accessDeniedHandler());
+        //http.csrf().disable();
     }
 
     @Bean
@@ -86,11 +86,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
         return new CustomAuthenticationProvider();
     }
 

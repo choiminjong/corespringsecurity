@@ -1,8 +1,0 @@
-{
-  "username": "user",
-  "password": "{bcrypt}$2a$10$3tYHKyQcXz730eib9zZiIeSz4IS/3SPvI1bKDPXbItywVCkG2o8qe",
-  "email": "dominic@nexon.co.kr",
-  "age": "1",
-  "role": "ROLE_USER",
-  "id": 1
-}
