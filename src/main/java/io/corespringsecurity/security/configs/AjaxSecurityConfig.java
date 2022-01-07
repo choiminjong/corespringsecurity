@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-//@Order(0)
+@Order(0)
 public class AjaxSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
@@ -56,7 +56,7 @@ public class AjaxSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new AjaxLoginAuthenticationEntryPoint())
                 .accessDeniedHandler(ajaxAccessDeniedHandler())
         ;
-//        http.csrf().disable();
+        //http.csrf().disable();
 
         ajaxConfigurer(http);
     }
