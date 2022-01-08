@@ -25,7 +25,7 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
     public AjaxAuthenticationProvider(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
-
+    //java/io/corespringsecurity/security/provider/AjaxAuthenticationProvider.java
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         /*
@@ -44,6 +44,10 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("BadCredentialsException");
         }
 
+//        if (!passwordEncoder.matches(password, accountContext.getPassword())) {
+//            throw new BadCredentialsException("Invalid password");
+//        }
+
         //UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountContext.getAccount(), null,accountContext.getAuthorities());
         /*
         인증이 성공하면(조건이 발생하는 오류없다면)
@@ -52,6 +56,8 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
         accountContext.getAuthorities()) -- 권한정보
         AjaxAuthenticationToken 3개의 객체 데이터 기반으로 토큰을 생성해서 반환한다.
          */
+        //return new AjaxAuthenticationToken(accountContext.getAccount(), null, accountContext.getAuthorities());
+
         AjaxAuthenticationToken ajaxAuthenticationToken = new AjaxAuthenticationToken(accountContext.getAccount(), null, accountContext.getAuthorities());
         return ajaxAuthenticationToken;
     }

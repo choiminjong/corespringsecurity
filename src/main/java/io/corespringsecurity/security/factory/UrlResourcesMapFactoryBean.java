@@ -2,6 +2,7 @@ package io.corespringsecurity.security.factory;
 
 import io.corespringsecurity.service.SecurityResourceService;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -12,7 +13,9 @@ import java.util.List;
 public class UrlResourcesMapFactoryBean implements FactoryBean<LinkedHashMap<RequestMatcher, List<ConfigAttribute>>> {
 
     //DB자원(권한 정보들) 가져와서 UrlFilterInvocationSecurityMetadataSource 매핑한다.
+    @Autowired
     private SecurityResourceService securityResourceService;
+
     private LinkedHashMap<RequestMatcher,List<ConfigAttribute>> resoureMap;
 
     public void setSecurityResourceService(SecurityResourceService securityResourceService) {
