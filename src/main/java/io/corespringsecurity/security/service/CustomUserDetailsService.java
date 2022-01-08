@@ -25,20 +25,39 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private HttpServletRequest request;
 
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//
+//        Account account = userRepository.findByUsername(username);
+//
+//        if(account == null){
+//            throw new UsernameNotFoundException("UsernameNotFoundException");
+//        }
+//
+//        List<GrantedAuthority> roles = new ArrayList<>();
+//        roles.add(new SimpleGrantedAuthority(account.getRole()));
+//
+//        AccountContext accountContext = new AccountContext(account, roles);
+//
+//        return accountContext;
+//    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Account account = userRepository.findByUsername(username);
-
-        if(account == null){
-            throw new UsernameNotFoundException("UsernameNotFoundException");
+        if (account == null) {
+            if (userRepository.countByUsername(username) == 0) {
+                throw new UsernameNotFoundException("No user found with username: " + username);
+            }
         }
+        Set<String> userRoles = account.getUserRoles()
+                .stream()
+                .map(userRole -> userRole.getRoleName())
+                .collect(Collectors.toSet());
 
-        List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(account.getRole()));
-
-        AccountContext accountContext = new AccountContext(account, roles);
-
-        return accountContext;
+        List<GrantedAuthority> collect = userRoles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return new AccountContext(account, collect);
     }
+
 }
