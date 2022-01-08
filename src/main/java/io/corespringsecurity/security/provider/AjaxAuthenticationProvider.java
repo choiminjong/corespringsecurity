@@ -13,6 +13,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.transaction.Transactional;
+
 public class AjaxAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
@@ -27,6 +29,7 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
     }
     //java/io/corespringsecurity/security/provider/AjaxAuthenticationProvider.java
     @Override
+    @Transactional
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         /*
          로그인시도시 authentication 객체에 데이터가 매핑되어있습니다.
