@@ -183,7 +183,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
         accessDecisionVoters.add(roleVoter());
 
-        return Arrays.asList(new RoleVoter());
+        //return Arrays.asList(new RoleVoter());
+        return accessDecisionVoters;
     }
 
     @Bean
