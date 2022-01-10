@@ -54,10 +54,14 @@ public class CustomUserDetailsService implements UserDetailsService {
             }
         }
 
+       // System.out.println("account.getUserRoles() = " + account.getUserRoles());
+
         Set<String> userRoles = account.getUserRoles()
                 .stream()
                 .map(userRole -> userRole.getRoleName())
                 .collect(Collectors.toSet());
+
+       // System.out.println("userRoles = " + userRoles);
 
         List<GrantedAuthority> collect = userRoles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
         return new AccountContext(account, collect);

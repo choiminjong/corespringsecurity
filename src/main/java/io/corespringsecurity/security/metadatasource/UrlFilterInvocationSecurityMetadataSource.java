@@ -1,6 +1,7 @@
 package io.corespringsecurity.security.metadatasource;
 
 import io.corespringsecurity.service.SecurityResourceService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -15,6 +16,7 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
 
     private LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap;
     //권한,인가 저장소를 불러오는 서비스
+    @Autowired
     private SecurityResourceService securityResourceService;
 
     public UrlFilterInvocationSecurityMetadataSource(LinkedHashMap<RequestMatcher, List<ConfigAttribute>> resourcesMap, SecurityResourceService securityResourceService) {
@@ -27,8 +29,9 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
     //권한추출하는 로직
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         Collection<ConfigAttribute> result = null;
-        FilterInvocation fi = (FilterInvocation) object;
+
         //request = url 주소 정보
+        FilterInvocation fi = (FilterInvocation) object;
         HttpServletRequest httpServletRequest = fi.getHttpRequest();
 
         //수동으로 데이터 추가 테스트
@@ -51,7 +54,6 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
     }
 
     public void reload() throws Exception {
-
         LinkedHashMap<RequestMatcher, List<ConfigAttribute>> reloadedMap = securityResourceService.getResourceList();
         Iterator<Map.Entry<RequestMatcher, List<ConfigAttribute>>> iterator = reloadedMap.entrySet().iterator();
         requestMap.clear();

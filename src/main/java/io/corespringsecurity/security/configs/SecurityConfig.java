@@ -3,6 +3,7 @@ package io.corespringsecurity.security.configs;
 import io.corespringsecurity.security.common.FormWebAuthenticationDetailsSource;
 import io.corespringsecurity.security.factory.UrlResourcesMapFactoryBean;
 import io.corespringsecurity.security.filter.AjaxLoginProcessingFilter;
+import io.corespringsecurity.security.filter.PermitAllFilter;
 import io.corespringsecurity.security.handler.CustomAccessDeniedHandler;
 import io.corespringsecurity.security.handler.CustomAuthenticationFailureHandler;
 import io.corespringsecurity.security.handler.CustomAuthenticationSuccessHandler;
@@ -57,6 +58,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SecurityResourceService securityResourceService;
 
+    //인가처리되지않도록 설정
+    private String[] permitAllResources={"/","/login","/user/login/**"};
+
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -83,7 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/config").hasRole("ADMIN")
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
-       .and()
+                .and()
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login_proc")
@@ -91,15 +95,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(customAuthenticationSuccessHandler)
                 .failureHandler(customAuthenticationFailureHandler)
                 .permitAll()
-        .and()
+                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")) //인증되지 않았을 때의 동작을
                 .accessDeniedPage("/denied")
                 .accessDeniedHandler(accessDeniedHandler())
-        .and()
+                .and()
                 .addFilterBefore(customFilterSecurityInterceptor(),FilterSecurityInterceptor.class)
         ;
-        //http.csrf().disable();
+        http.csrf().disable();
     }
 
     @Bean
@@ -121,14 +125,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     //인가(url 권한 검토)처리 필터 생성
-    public FilterSecurityInterceptor customFilterSecurityInterceptor() throws Exception {
-        FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
-        filterSecurityInterceptor.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource());
+    public PermitAllFilter customFilterSecurityInterceptor() throws Exception {
+        PermitAllFilter permitAllFilter = new PermitAllFilter(permitAllResources);
+        permitAllFilter.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource());
         //승인 인가처리 방식
-        filterSecurityInterceptor.setAccessDecisionManager(affirmativeBased());
-        filterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean());
-        return filterSecurityInterceptor;
+        permitAllFilter.setAccessDecisionManager(affirmativeBased());
+        permitAllFilter.setAuthenticationManager(authenticationManagerBean());
+        return permitAllFilter;
     }
+
+//    @Bean
+//    //인가(url 권한 검토)처리 필터 생성
+//    public FilterSecurityInterceptor customFilterSecurityInterceptor() throws Exception {
+//        FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
+//        filterSecurityInterceptor.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource());
+//        //승인 인가처리 방식
+//        filterSecurityInterceptor.setAccessDecisionManager(affirmativeBased());
+//        filterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean());
+//        return filterSecurityInterceptor;
+//    }
 
     //여러 Voter중에 하나라도 허용되면 허용된다. (기본 전략)
     private AccessDecisionManager affirmativeBased() {
