@@ -106,34 +106,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")) //인증되지 않았을 때의 동작을
                 .accessDeniedPage("/denied")
                 .accessDeniedHandler(accessDeniedHandler())
-        
-//        .and()
-//                .sessionManagement()
-////                .invalidSessionUrl("/users/invalidSession.html")
-//                .maximumSessions(1) // -1 : 무제한 로그인 세션 허용
-//                .maxSessionsPreventsLogin(true) // false : 동시 로그인을 하지 못하도록 차단함
-//                //.expiredUrl("/login?expired=true")
-//                .sessionRegistry(sessionRegistry()).and()
-//                .sessionFixation().migrateSession()
 
-        .and()
-                .logout()
-                //.logoutSuccessHandler(logoutSuccessHandler)
-                //.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/index")
-                .clearAuthentication(true)
-                .invalidateHttpSession(true)
-                .deleteCookies("SESSION", "JSESSIONID", "remember-me")
-                
         .and()
                 .addFilterBefore(customFilterSecurityInterceptor(),FilterSecurityInterceptor.class)
         ;
         http.csrf().disable();
     }
 
-    @Bean
-    public SessionRegistry sessionRegistry() {
-        return new SessionRegistryImpl();
-    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -182,7 +161,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private List<AccessDecisionVoter<?>> getAccessDecistionVoters() {
         List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
         accessDecisionVoters.add(roleVoter());
-
         //return Arrays.asList(new RoleVoter());
         return accessDecisionVoters;
     }

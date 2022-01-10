@@ -1,9 +1,6 @@
 package io.corespringsecurity.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Builder
 @Table(name="ROLE_HIERARCHY")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,4 +30,11 @@ public class RoleHierarchy implements Serializable {
 
     @OneToMany(mappedBy = "parentName", cascade={CascadeType.ALL})
     private Set<RoleHierarchy> roleHierarchy = new HashSet<RoleHierarchy>();
+
+    @Builder
+    public RoleHierarchy(String childName, RoleHierarchy parentName) {
+        this.childName = childName;
+        this.parentName = parentName;
+    }
+
 }
