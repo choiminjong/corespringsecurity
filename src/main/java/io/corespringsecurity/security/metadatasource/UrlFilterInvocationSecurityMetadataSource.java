@@ -1,5 +1,6 @@
 package io.corespringsecurity.security.metadatasource;
 
+import io.corespringsecurity.service.SecurityResourceService;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -12,43 +13,54 @@ import java.util.*;
 
 public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
-    private LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap = new LinkedHashMap<>();
+    private LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap;
+    //권한,인가 저장소를 불러오는 서비스
+    private SecurityResourceService securityResourceService;
 
-    public UrlFilterInvocationSecurityMetadataSource(LinkedHashMap<RequestMatcher, List<ConfigAttribute>> resourcesMap) {
+    public UrlFilterInvocationSecurityMetadataSource(LinkedHashMap<RequestMatcher, List<ConfigAttribute>> resourcesMap, SecurityResourceService securityResourceService) {
         this.requestMap = resourcesMap;
+        this.securityResourceService= securityResourceService;
     }
+
 
     @Override
     //권한추출하는 로직
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
+        Collection<ConfigAttribute> result = null;
+        FilterInvocation fi = (FilterInvocation) object;
         //request = url 주소 정보
-        HttpServletRequest request = ((FilterInvocation) object).getRequest();
+        HttpServletRequest httpServletRequest = fi.getHttpRequest();
 
         //수동으로 데이터 추가 테스트
-        requestMap.put(new AntPathRequestMatcher("/mypage"), Arrays.asList(new SecurityConfig("ROLE_USER")));
+        //requestMap.put(new AntPathRequestMatcher("/admin/**"), Arrays.asList(new SecurityConfig("ROLE_USER")));
 
-        if(requestMap != null){
-            for(Map.Entry<RequestMatcher, List<ConfigAttribute>> entry : requestMap.entrySet()){
+        if (requestMap != null) {
+            for (Map.Entry<RequestMatcher, List<ConfigAttribute>> entry : requestMap.entrySet()) {
                 RequestMatcher matcher = entry.getKey();
-                if(matcher.matches(request)){
-                    return entry.getValue();
+                if (matcher.matches(httpServletRequest)) {
+                    result = entry.getValue();
+                    break;
                 }
             }
         }
+        return result;
+    }
 
+    public Collection<ConfigAttribute> getAllConfigAttributes() {
         return null;
     }
 
-    @Override
-    public Collection<ConfigAttribute> getAllConfigAttributes() {
-        Set<ConfigAttribute> allAttributes = new HashSet<>();
+    public void reload() throws Exception {
 
-        for (Map.Entry<RequestMatcher, List<ConfigAttribute>> entry : requestMap
-                .entrySet()) {
-            allAttributes.addAll(entry.getValue());
+        LinkedHashMap<RequestMatcher, List<ConfigAttribute>> reloadedMap = securityResourceService.getResourceList();
+        Iterator<Map.Entry<RequestMatcher, List<ConfigAttribute>>> iterator = reloadedMap.entrySet().iterator();
+        requestMap.clear();
+
+        while (iterator.hasNext()) {
+            Map.Entry<RequestMatcher, List<ConfigAttribute>> entry = iterator.next();
+
+            requestMap.put(entry.getKey(), entry.getValue());
         }
-
-        return allAttributes;
     }
 
     @Override

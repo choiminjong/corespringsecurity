@@ -53,6 +53,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 throw new UsernameNotFoundException("No user found with username: " + username);
             }
         }
+
         Set<String> userRoles = account.getUserRoles()
                 .stream()
                 .map(userRole -> userRole.getRoleName())
