@@ -27,6 +27,9 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
+        //세션처리
+        //request.getSession(false).setMaxInactiveInterval(3600);
+
         if(savedRequest!=null) {
             String targetUrl = savedRequest.getRedirectUrl();
             redirectStrategy.sendRedirect(request, response, targetUrl);

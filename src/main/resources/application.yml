@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      dl-auto: update
+      dl-auto: validate
       #ddl-auto: create
     properties:
       hibernate:
