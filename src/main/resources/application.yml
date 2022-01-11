@@ -7,8 +7,8 @@ spring:
 
   jpa:
     hibernate:
-      #dl-auto: validate
-      ddl-auto: create
+      dl-auto: validate
+      #ddl-auto: create
     properties:
       hibernate:
         show_sql: true
