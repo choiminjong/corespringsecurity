@@ -179,6 +179,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return affirmativeBased;
     }
 
+    //getAccessDecistionVoters 심의 단계
+    //커스텀 roleVoter
     private List<AccessDecisionVoter<?>> getAccessDecistionVoters() {
         List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
         accessDecisionVoters.add(roleVoter());

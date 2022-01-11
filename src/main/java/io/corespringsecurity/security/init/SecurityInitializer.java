@@ -24,6 +24,7 @@ public class SecurityInitializer implements ApplicationRunner {
 
     @Override
     @Transactional
+    //권한 계층 설정
     public void run(ApplicationArguments args) {
         String allHierarchy = roleHierarchyService.findAllHierarchy();
         roleHierarchy.setHierarchy(allHierarchy);

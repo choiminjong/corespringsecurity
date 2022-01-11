@@ -1,9 +1,6 @@
 package io.corespringsecurity.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,6 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 @ToString(exclude = {"parentName", "roleHierarchy"})
 //@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class RoleHierarchy implements Serializable {
