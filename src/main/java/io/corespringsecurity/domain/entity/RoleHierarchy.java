@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Builder
 @Table(name="ROLE_HIERARCHY")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,4 +31,11 @@ public class RoleHierarchy implements Serializable {
 
     @OneToMany(mappedBy = "parentName", cascade={CascadeType.ALL})
     private Set<RoleHierarchy> roleHierarchy = new HashSet<RoleHierarchy>();
+
+    @Builder
+    public RoleHierarchy(String childName, RoleHierarchy parentName) {
+        this.childName = childName;
+        this.parentName = parentName;
+    }
+
 }
