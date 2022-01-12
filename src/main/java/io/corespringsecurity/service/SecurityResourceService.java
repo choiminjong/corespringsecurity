@@ -26,9 +26,9 @@ public class SecurityResourceService {
     @Autowired
     private AccessIpRepository accessIpRepository;
 
-    public SecurityResourceService(ResourcesRepository resourcesRepository, AccessIpRepository accessIpRepository ) {
-        this.resourcesRepository = resourcesRepository;
-    }
+//    public SecurityResourceService(ResourcesRepository resourcesRepository, AccessIpRepository accessIpRepository ) {
+ //       this.resourcesRepository = resourcesRepository;
+ //   }
 
     //권한과 자원정보를 가져온다.
     public LinkedHashMap<RequestMatcher, List<ConfigAttribute>> getResourceList() {

@@ -7,10 +7,12 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
 
+@Service
 public class IpAddressVoter  implements AccessDecisionVoter<Object> {
 
     @Autowired

@@ -178,6 +178,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //ex) .antMatchers("/mypage").hasRole("USER")
 
         IpAddressVoter ipAddressVoter = new IpAddressVoter(securityResourceService);
+        //IpAddressVoter ipAddressVoter = new IpAddressVoter();
         List<AccessDecisionVoter<? extends Object>> accessDecisionVoterList = Arrays.asList(ipAddressVoter, roleVoter());
         return accessDecisionVoterList;
     }
