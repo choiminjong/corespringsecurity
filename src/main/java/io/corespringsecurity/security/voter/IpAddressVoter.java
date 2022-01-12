@@ -16,14 +16,18 @@ public class IpAddressVoter  implements AccessDecisionVoter<Object> {
     @Autowired
     private SecurityResourceService securityResourceService;
 
+    public IpAddressVoter(SecurityResourceService securityResourceService) {
+        this.securityResourceService = securityResourceService;
+    }
+
     @Override
     public boolean supports(ConfigAttribute attribute) {
-        return false;
+        return (attribute.getAttribute() != null);
     }
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return false;
+        return true;
     }
 
     @Override
@@ -36,7 +40,6 @@ public class IpAddressVoter  implements AccessDecisionVoter<Object> {
         //사용자의 정보를 알 수 있다. IP등등 details
         WebAuthenticationDetails details = (WebAuthenticationDetails)authentication.getDetails();
         String remoteAddress = details.getRemoteAddress();
-
         List<String> accessIpList = securityResourceService.getAccessIpList();
 
         int result = ACCESS_DENIED; // 허용되지 않음

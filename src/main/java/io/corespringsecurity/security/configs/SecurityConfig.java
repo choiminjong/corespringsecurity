@@ -169,17 +169,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //getAccessDecistionVoters 심의 단계
     //커스텀 roleVoter
     private List<AccessDecisionVoter<?>> getAccessDecistionVoters() {
-        List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
+        //List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
 
         //IP 심의
-        //accessDecisionVoters.add(new IpAddressVoter());
-
         // RoleHierarchyVoter 권한 심의
-        accessDecisionVoters.add(roleVoter());
+        //accessDecisionVoters.add(roleVoter());
         //디폴트 new RoleVoter는 hasRole 개인으로 설정된 데이터 체크만한다. 상위 권한 여부를 체크하지않는다.
         //ex) .antMatchers("/mypage").hasRole("USER")
-        //return Arrays.asList(new RoleVoter());
-        return accessDecisionVoters;
+
+        IpAddressVoter ipAddressVoter = new IpAddressVoter(securityResourceService);
+        List<AccessDecisionVoter<? extends Object>> accessDecisionVoterList = Arrays.asList(ipAddressVoter, roleVoter());
+        return accessDecisionVoterList;
     }
 
     @Bean

@@ -83,6 +83,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         //roleHierarchy
         //createRoleHierarchyIfNotFound(managerRole,adminRole);
         //createRoleHierarchyIfNotFound(userRole,managerRole);
+        //setupAccessIpData();
     }
 
     @Transactional
@@ -159,11 +160,22 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Transactional
     public void setupAccessIpData(){
         AccessIp byIpAddress = accessIpRepository.findByIpAddress("0:0:0:0:0:0:0:1");
+
         if(byIpAddress == null){
             AccessIp accessIp = AccessIp.builder()
                     .ipAddress("0:0:0:0:0:0:0:1")
                     .build();
             accessIpRepository.save(accessIp);
         }
+
+        AccessIp byIpAddress2 = accessIpRepository.findByIpAddress("127.0.0.1");
+
+        if(byIpAddress2 == null){
+            AccessIp accessIp2 = AccessIp.builder()
+                    .ipAddress("127.0.0.1")
+                    .build();
+            accessIpRepository.save(accessIp2);
+        }
+
     }
 }

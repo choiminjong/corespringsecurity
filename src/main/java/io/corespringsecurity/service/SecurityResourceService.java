@@ -26,7 +26,7 @@ public class SecurityResourceService {
     @Autowired
     private AccessIpRepository accessIpRepository;
 
-    public SecurityResourceService(ResourcesRepository resourcesRepository) {
+    public SecurityResourceService(ResourcesRepository resourcesRepository, AccessIpRepository accessIpRepository ) {
         this.resourcesRepository = resourcesRepository;
     }
 
