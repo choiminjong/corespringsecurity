@@ -10,6 +10,7 @@ import io.corespringsecurity.security.handler.CustomAuthenticationSuccessHandler
 import io.corespringsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import io.corespringsecurity.security.provider.CustomAuthenticationProvider;
 import io.corespringsecurity.security.provider.FormAuthenticationProvider;
+import io.corespringsecurity.security.voter.IpAddressVoter;
 import io.corespringsecurity.service.SecurityResourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,8 +134,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     //인가(url 권한 검토)처리 필터 생성
     public PermitAllFilter customFilterSecurityInterceptor() throws Exception {
+        //페이지 permitAll()
         PermitAllFilter permitAllFilter = new PermitAllFilter(permitAllResources);
+
+        ////requestMap.put(new AntPathRequestMatcher("/admin/**"), Arrays.asList(new SecurityConfig("ROLE_USER")));
         permitAllFilter.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource());
+
         //승인 인가처리 방식
         permitAllFilter.setAccessDecisionManager(affirmativeBased());
         permitAllFilter.setAuthenticationManager(authenticationManagerBean());
@@ -152,7 +157,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        return filterSecurityInterceptor;
 //    }
 
-    //여러 Voter중에 하나라도 허용되면 허용된다. (기본 전략)
+
+    /*
+        여러 Voter중에 하나라도 허용되면 허용된다. (기본 전략)
+     */
     private AccessDecisionManager affirmativeBased() {
         AffirmativeBased affirmativeBased = new AffirmativeBased(getAccessDecistionVoters());
         return affirmativeBased;
@@ -162,7 +170,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //커스텀 roleVoter
     private List<AccessDecisionVoter<?>> getAccessDecistionVoters() {
         List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
+
+        //IP 심의
+        //accessDecisionVoters.add(new IpAddressVoter());
+
+        // RoleHierarchyVoter 권한 심의
         accessDecisionVoters.add(roleVoter());
+        //디폴트 new RoleVoter는 hasRole 개인으로 설정된 데이터 체크만한다. 상위 권한 여부를 체크하지않는다.
+        //ex) .antMatchers("/mypage").hasRole("USER")
         //return Arrays.asList(new RoleVoter());
         return accessDecisionVoters;
     }

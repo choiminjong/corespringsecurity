@@ -89,14 +89,13 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     public void createRoleHierarchyIfNotFound(Role childRole, Role parentRole) {
 
         RoleHierarchy roleHierarchy = roleHierarchyRepository.findByChildName(parentRole.getRoleName());
-
         if(roleHierarchy == null){
             roleHierarchy = RoleHierarchy.builder()
                     .childName(childRole.getRoleName())
                     .build();
         }
 
-        RoleHierarchy parentRoleHierachy = roleHierarchyRepository.save(roleHierarchy);
+        RoleHierarchy parentRoleHierarchy = roleHierarchyRepository.save(roleHierarchy);
 
         roleHierarchy = roleHierarchyRepository.findByChildName(childRole.getRoleName());
         if(roleHierarchy == null){
@@ -105,8 +104,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                     .build();
         }
 
-        RoleHierarchy childRoleHierartchy = roleHierarchyRepository.save(roleHierarchy);
-        childRoleHierartchy.setParentName(parentRoleHierachy);
+        RoleHierarchy childRoleHierarchy = roleHierarchyRepository.save(roleHierarchy);
+        childRoleHierarchy.setParentName(parentRoleHierarchy);
+        roleHierarchyRepository.save(childRoleHierarchy);
     }
 
     @Transactional
