@@ -8,16 +8,24 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
+import java.util.HashMap;
 
 @Controller
 public class LoginController {
+
+    @ResponseBody
+    @RequestMapping(value="/api/v1/test", method= RequestMethod.GET)
+    public HashMap<String, Object> test2() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("abc", "ddd");
+        return map;
+    }
+
 
     @RequestMapping(value="/login")
     public String login(@RequestParam(value = "error", required = false) String error,
@@ -30,10 +38,11 @@ public class LoginController {
     @RequestMapping(value="/api/login")
     public String ajaxLogin(@RequestParam(value = "error", required = false) String error,
                             @RequestParam(value = "exception", required = false) String exception, Model model){
+
         model.addAttribute("error",error);
         model.addAttribute("exception",exception);
         return "login";
-    }
+}
 
 
     @GetMapping("/logout")

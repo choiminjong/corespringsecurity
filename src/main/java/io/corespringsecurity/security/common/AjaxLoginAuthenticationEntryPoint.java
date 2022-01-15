@@ -25,6 +25,7 @@ public class AjaxLoginAuthenticationEntryPoint implements AuthenticationEntryPoi
 //        response.setStatus(HttpStatus.UNAUTHORIZED.value());
 //        response.getWriter().write(objectMapper.writeValueAsString(HttpServletResponse.SC_UNAUTHORIZED));
 
+        System.out.println("AJAX UnAuthorized Error ");
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"UnAuthorized");
 
     }

@@ -29,7 +29,6 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException {
 
-
         //헤더를 확인한다. 응용 ) auth 인증 필터를 만들 수 있다.
         if(!isAjax(request)){
             throw new IllegalStateException("Authentication is nor supported");

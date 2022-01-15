@@ -26,6 +26,7 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
+
         //json 형태로 반환한다.
         objectMapper.writeValue(response.getWriter(),account);
     }
