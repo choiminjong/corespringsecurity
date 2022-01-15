@@ -23,6 +23,8 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
          */
         Account account = (Account)authentication.getPrincipal();
 
+        System.out.println("api 로그인 성공 " + account);
+
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 

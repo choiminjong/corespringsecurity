@@ -3,6 +3,7 @@ package io.corespringsecurity.security.configs;
 import io.corespringsecurity.security.common.FormWebAuthenticationDetailsSource;
 import io.corespringsecurity.security.factory.UrlResourcesMapFactoryBean;
 import io.corespringsecurity.security.filter.AjaxLoginProcessingFilter;
+import io.corespringsecurity.security.filter.AuthAPIProcessingFilter;
 import io.corespringsecurity.security.filter.PermitAllFilter;
 import io.corespringsecurity.security.handler.*;
 import io.corespringsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
@@ -32,6 +33,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -46,6 +48,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.Filter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -80,8 +83,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
         auth.authenticationProvider(ajaxAuthenticationProvider());
+        auth.authenticationProvider(authenticationProvider());
     }
 
     @Bean
@@ -114,22 +117,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedPage("/denied")
                 .accessDeniedHandler(accessDeniedHandler())
        .and()
-                .addFilterAt(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class);
+                .addFilterBefore(authAPIProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class)
+        ;
 
-        http.csrf().disable();
-
-        ajaxConfigurer(http);
+        //ajaxConfigurer(http);
     }
 
-    private void ajaxConfigurer(HttpSecurity http) throws Exception {
-        http
-                .apply(new AjaxLoginConfigurer<>())
-                .successHandlerAjax(ajaxAuthenticationSuccessHandler())
-                .failureHandlerAjax(ajaxAuthenticationFailureHandler())
-                .loginPage("/api/login")
-                .loginProcessingUrl("/api/login")
-                .setAuthenticationManager(authenticationManagerBean());
+    //필터등록
+    @Bean
+    public AuthAPIProcessingFilter authAPIProcessingFilter() throws Exception {
+        AuthAPIProcessingFilter filter = new AuthAPIProcessingFilter();
+        filter.setAuthenticationManager(authenticationManagerBean());
+        return filter;
     }
+
+//    private void ajaxConfigurer(HttpSecurity http) throws Exception {
+//        http
+//                .apply(new AjaxLoginConfigurer<>())
+//                .successHandlerAjax(ajaxAuthenticationSuccessHandler())
+//                .failureHandlerAjax(ajaxAuthenticationFailureHandler())
+//                .loginPage("/api/login")
+//                .loginProcessingUrl("/api/login")
+//                .setAuthenticationManager(authenticationManagerBean());
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

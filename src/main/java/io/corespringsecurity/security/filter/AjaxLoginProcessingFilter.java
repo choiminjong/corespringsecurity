@@ -43,8 +43,9 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
         }
 
         //null 데이터 체크이후 토큰을 발생해서 인증처리합니다.
-        AjaxAuthenticationToken token = new AjaxAuthenticationToken(accountDto.getUsername(),accountDto.getPassword());
-        return this.getAuthenticationManager().authenticate(token);
+       // AjaxAuthenticationToken token = new AjaxAuthenticationToken(accountDto.getUsername(),accountDto.getPassword());
+        //return this.getAuthenticationManager().authenticate(token);
+        return  null;
     }
 
     public static boolean isAjax(HttpServletRequest request) {

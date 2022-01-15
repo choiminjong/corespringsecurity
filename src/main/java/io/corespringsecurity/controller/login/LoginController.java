@@ -23,6 +23,7 @@ public class LoginController {
     public HashMap<String, Object> test2() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("abc", "ddd");
+        System.out.println("map  " + map);
         return map;
     }
 
@@ -32,6 +33,8 @@ public class LoginController {
                         @RequestParam(value = "exception", required = false) String exception, Model model){
         model.addAttribute("error",error);
         model.addAttribute("exception",exception);
+
+        System.out.println("login !!!!!!");
         return "login";
     }
 

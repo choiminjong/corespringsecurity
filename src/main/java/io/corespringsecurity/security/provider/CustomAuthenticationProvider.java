@@ -49,6 +49,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountContext.getAccount(), null,accountContext.getAuthorities());
 
+        System.out.println("FORM authenticationToken = " + authenticationToken);
         return authenticationToken;
     }
 
