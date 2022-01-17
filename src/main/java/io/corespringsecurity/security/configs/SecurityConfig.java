@@ -5,6 +5,8 @@ import io.corespringsecurity.security.factory.UrlResourcesMapFactoryBean;
 import io.corespringsecurity.security.filter.AuthAPIProcessingFilter;
 import io.corespringsecurity.security.filter.PermitAllFilter;
 import io.corespringsecurity.security.handler.*;
+import io.corespringsecurity.security.jwt.JwtFilter;
+import io.corespringsecurity.security.jwt.TokenProvider;
 import io.corespringsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import io.corespringsecurity.security.provider.AjaxAuthenticationProvider;
 import io.corespringsecurity.security.provider.CustomAuthenticationProvider;
@@ -42,7 +44,6 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@Order(1)
 //@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -57,6 +58,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private SecurityResourceService securityResourceService;
+
+    @Autowired
+    private TokenProvider tokenProvider;
 
     //인가처리되지않도록 설정
     private String[] permitAllResources={"/","/login","/user/login/**"};
@@ -103,17 +107,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedPage("/denied")
                 .accessDeniedHandler(accessDeniedHandler())
        .and()
-                .addFilterBefore(authAPIProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class)
         ;
 
     }
 
+
     //JWT 필터등록
     @Bean
-    public AuthAPIProcessingFilter authAPIProcessingFilter() throws Exception {
-        AuthAPIProcessingFilter filter = new AuthAPIProcessingFilter();
-        filter.setAuthenticationManager(authenticationManagerBean());
+    public JwtFilter jwtFilter() throws Exception {
+        JwtFilter filter = new JwtFilter(tokenProvider);
         return filter;
     }
 
