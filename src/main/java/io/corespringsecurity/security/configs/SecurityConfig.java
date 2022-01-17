@@ -2,7 +2,6 @@ package io.corespringsecurity.security.configs;
 
 import io.corespringsecurity.security.common.FormWebAuthenticationDetailsSource;
 import io.corespringsecurity.security.factory.UrlResourcesMapFactoryBean;
-import io.corespringsecurity.security.filter.AuthAPIProcessingFilter;
 import io.corespringsecurity.security.filter.PermitAllFilter;
 import io.corespringsecurity.security.handler.*;
 import io.corespringsecurity.security.jwt.JwtFilter;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
@@ -73,13 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(ajaxAuthenticationProvider());
         auth.authenticationProvider(authenticationProvider());
-    }
-
-    @Bean
-    public AuthenticationProvider ajaxAuthenticationProvider() {
-        return new AjaxAuthenticationProvider(passwordEncoder());
     }
 
 
