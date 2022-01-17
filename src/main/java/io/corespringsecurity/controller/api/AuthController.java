@@ -3,7 +3,7 @@ package io.corespringsecurity.controller.api;
 import io.corespringsecurity.domain.dto.LoginDto;
 import io.corespringsecurity.domain.dto.TokenDto;
 import io.corespringsecurity.security.filter.JwtFilter;
-import io.corespringsecurity.security.token.TokenProvider;
+import io.corespringsecurity.security.token.JwtTokenProvider;
 import io.corespringsecurity.security.service.AccountContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @RestController
 public class AuthController {
     @Autowired
-    private TokenProvider tokenProvider;
+    private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -36,7 +36,7 @@ public class AuthController {
         //세션저장
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-        String jwt = tokenProvider.createToken(authenticationToken);
+        String jwt = jwtTokenProvider.createToken(authenticationToken);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);

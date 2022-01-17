@@ -20,9 +20,9 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 @Component
-public class TokenProvider implements InitializingBean {
+public class JwtTokenProvider implements InitializingBean {
 
-    private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
+    private final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     private static final String AUTHORITIES_KEY = "auth";
 
@@ -32,7 +32,7 @@ public class TokenProvider implements InitializingBean {
     private Key key;
 
 
-    public TokenProvider(
+    public JwtTokenProvider(
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
         this.secret = secret;

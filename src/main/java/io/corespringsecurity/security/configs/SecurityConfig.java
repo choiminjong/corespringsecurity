@@ -5,7 +5,7 @@ import io.corespringsecurity.security.factory.UrlResourcesMapFactoryBean;
 import io.corespringsecurity.security.filter.PermitAllFilter;
 import io.corespringsecurity.security.handler.*;
 import io.corespringsecurity.security.filter.JwtFilter;
-import io.corespringsecurity.security.token.TokenProvider;
+import io.corespringsecurity.security.token.JwtTokenProvider;
 import io.corespringsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import io.corespringsecurity.security.provider.CustomAuthenticationProvider;
 import io.corespringsecurity.security.voter.IpAddressVoter;
@@ -32,8 +32,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import java.util.Arrays;
@@ -58,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private SecurityResourceService securityResourceService;
 
     @Autowired
-    private TokenProvider tokenProvider;
+    private JwtTokenProvider jwtTokenProvider;
 
     //인가처리되지않도록 설정
     private String[] permitAllResources={"/","/login","/user/login/**","/api/auth/**"};
@@ -108,7 +106,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //JWT 필터등록
     @Bean
     public JwtFilter jwtFilter() throws Exception {
-        JwtFilter filter = new JwtFilter(tokenProvider);
+        JwtFilter filter = new JwtFilter(jwtTokenProvider);
         return filter;
     }
 
