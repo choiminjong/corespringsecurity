@@ -16,4 +16,8 @@ public interface UserService {
     AccountDto getUser(Long id);
 
     void deleteUser(Long idx);
+
+    AccountDto getUserWithAuthorities(String username);
+
+    AccountDto getMyUserWithAuthorities();
 }

@@ -33,16 +33,15 @@ public class AuthController {
     public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
 
         AccountContext accountContext =(AccountContext)userDetailsService.loadUserByUsername(loginDto.getUsername());
-        System.out.println("accountContext = " + accountContext);
+        //System.out.println("accountContext = " + accountContext);
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountContext.getAccount(), null,accountContext.getAuthorities());
-        System.out.println("authentication ==" + authenticationToken);
+        //System.out.println("authentication ==" + authenticationToken);
 
         //세션저장
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         String jwt = tokenProvider.createToken(authenticationToken);
-
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);

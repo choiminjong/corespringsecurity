@@ -56,6 +56,12 @@ public class TokenProvider implements InitializingBean {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
+//        System.out.println("authentication.getName() = "+ authentication.getName());
+//        System.out.println("authorities = "+ authorities);
+        /*
+            authentication.getName() = Account(id=4, username=admin, email=admin@gmail.com, age=10, password={bcrypt}$2a$10$w1RjhjUJj7xXCWmGjr3FmuVeZjyyZAuLoLJyBPPv.BERJa.s0BR8.)
+            authorities = ROLE_ADMIN,ROLE_MANAGER,ROLE_USER
+         */
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
@@ -72,14 +78,18 @@ public class TokenProvider implements InitializingBean {
                 .parseClaimsJws(token)
                 .getBody();
 
+        System.out.println("getAuthentication claims = " + claims);
+
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
         //import org.springframework.security.core.userdetails.User;
-        User principal = new User(claims.getSubject(), "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        //User principal = new User(claims.getSubject(), "", authorities);
+
+        return new UsernamePasswordAuthenticationToken(claims.getSubject(), null,authorities);
+
     }
 
     public boolean validateToken(String token) {

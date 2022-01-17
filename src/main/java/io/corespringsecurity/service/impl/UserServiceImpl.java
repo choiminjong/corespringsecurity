@@ -5,6 +5,7 @@ import io.corespringsecurity.domain.entity.Account;
 import io.corespringsecurity.domain.entity.Role;
 import io.corespringsecurity.repository.RoleRepository;
 import io.corespringsecurity.repository.UserRepository;
+import io.corespringsecurity.security.util.SecurityUtil;
 import io.corespringsecurity.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,5 +85,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+    
+    //권한검증
+    @Transactional
+    public AccountDto getUserWithAuthorities(String username) {
+        return AccountDto.from(userRepository.findOneWithAuthoritiesByUsername(username).orElse(null));
+    }
+
+    @Transactional
+    public AccountDto getMyUserWithAuthorities() {
+        return AccountDto.from(SecurityUtil.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByUsername).orElse(null));
     }
 }
