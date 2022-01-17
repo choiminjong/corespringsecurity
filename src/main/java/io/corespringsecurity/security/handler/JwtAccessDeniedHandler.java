@@ -1,4 +1,4 @@
-package io.corespringsecurity.security.jwt;
+package io.corespringsecurity.security.handler;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

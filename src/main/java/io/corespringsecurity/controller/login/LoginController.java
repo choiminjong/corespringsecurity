@@ -1,7 +1,6 @@
 package io.corespringsecurity.controller.login;
 
 import io.corespringsecurity.domain.entity.Account;
-import io.corespringsecurity.security.token.AjaxAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -77,9 +76,6 @@ public class LoginController {
 
         if (principal instanceof UsernamePasswordAuthenticationToken) {
             account = (Account) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-
-        }else if(principal instanceof AjaxAuthenticationToken){
-            account = (Account) ((AjaxAuthenticationToken) principal).getPrincipal();
         }
 
         model.addAttribute("username", account.getUsername());

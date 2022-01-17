@@ -1,5 +1,6 @@
-package io.corespringsecurity.security.jwt;
+package io.corespringsecurity.security.filter;
 
+import io.corespringsecurity.security.token.TokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;

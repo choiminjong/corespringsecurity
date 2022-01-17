@@ -4,10 +4,9 @@ import io.corespringsecurity.security.common.FormWebAuthenticationDetailsSource;
 import io.corespringsecurity.security.factory.UrlResourcesMapFactoryBean;
 import io.corespringsecurity.security.filter.PermitAllFilter;
 import io.corespringsecurity.security.handler.*;
-import io.corespringsecurity.security.jwt.JwtFilter;
-import io.corespringsecurity.security.jwt.TokenProvider;
+import io.corespringsecurity.security.filter.JwtFilter;
+import io.corespringsecurity.security.token.TokenProvider;
 import io.corespringsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
-import io.corespringsecurity.security.provider.AjaxAuthenticationProvider;
 import io.corespringsecurity.security.provider.CustomAuthenticationProvider;
 import io.corespringsecurity.security.voter.IpAddressVoter;
 import io.corespringsecurity.service.SecurityResourceService;
@@ -124,16 +123,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AuthenticationSuccessHandler ajaxAuthenticationSuccessHandler(){
-        return new AjaxAuthenticationSuccessHandler();
-    }
-
-    @Bean
-    public AuthenticationFailureHandler ajaxAuthenticationFailureHandler(){
-        return new AjaxAuthenticationFailureHandler();
-    }
-
-    @Bean
     public AccessDeniedHandler accessDeniedHandler(){
         CustomAccessDeniedHandler customAccessDeniedHandler = new CustomAccessDeniedHandler();
         customAccessDeniedHandler.setErrorPage("/denied");
@@ -176,8 +165,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         IpAddressVoter ipAddressVoter = new IpAddressVoter(securityResourceService);
 
-        List<AccessDecisionVoter<? extends Object>> accessDecisionVoterList = Arrays.asList(ipAddressVoter, roleVoter());
-        //List<AccessDecisionVoter<? extends Object>> accessDecisionVoterList = Arrays.asList( roleVoter());
+        //List<AccessDecisionVoter<? extends Object>> accessDecisionVoterList = Arrays.asList(ipAddressVoter, roleVoter());
+        List<AccessDecisionVoter<? extends Object>> accessDecisionVoterList = Arrays.asList( roleVoter());
         return accessDecisionVoterList;
     }
 
