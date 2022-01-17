@@ -176,8 +176,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         IpAddressVoter ipAddressVoter = new IpAddressVoter(securityResourceService);
 
-        //List<AccessDecisionVoter<? extends Object>> accessDecisionVoterList = Arrays.asList(ipAddressVoter, roleVoter());
-        List<AccessDecisionVoter<? extends Object>> accessDecisionVoterList = Arrays.asList( roleVoter());
+        List<AccessDecisionVoter<? extends Object>> accessDecisionVoterList = Arrays.asList(ipAddressVoter, roleVoter());
+        //List<AccessDecisionVoter<? extends Object>> accessDecisionVoterList = Arrays.asList( roleVoter());
         return accessDecisionVoterList;
     }
 

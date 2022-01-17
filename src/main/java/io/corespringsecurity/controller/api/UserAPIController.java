@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,13 @@ public class UserAPIController {
         return ResponseEntity.ok("hello");
     }
 
+    @PostMapping("/api/v1/hello")
+    public ResponseEntity<String> hello2() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("authentication = " + authentication);
+        return ResponseEntity.ok("hello");
+    }
+
     @GetMapping("/api/v1/user")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public String getMyUserInfo() {
@@ -40,8 +48,9 @@ public class UserAPIController {
 
     @GetMapping("/api/v1/user/{username}")
     //@PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<AccountDto> getUserInfo(@PathVariable String username) {
-        return ResponseEntity.ok(userService.getUserWithAuthorities(username));
+    public String getUserInfo(@PathVariable String username) {
+        return username;
+       // return ResponseEntity.ok(userService.getUserWithAuthorities(username));
     }
 
 }
