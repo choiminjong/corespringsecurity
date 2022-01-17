@@ -29,7 +29,7 @@ public class AuthController {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @PostMapping("/api/authenticate")
+    @PostMapping("/api/auth/token")
     public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
 
         AccountContext accountContext =(AccountContext)userDetailsService.loadUserByUsername(loginDto.getUsername());

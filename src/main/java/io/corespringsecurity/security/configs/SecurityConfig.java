@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private TokenProvider tokenProvider;
 
     //인가처리되지않도록 설정
-    private String[] permitAllResources={"/","/login","/user/login/**","/api/authenticate","/api/check"};
+    private String[] permitAllResources={"/","/login","/user/login/**","/api/auth/**"};
 
 
     @Override
