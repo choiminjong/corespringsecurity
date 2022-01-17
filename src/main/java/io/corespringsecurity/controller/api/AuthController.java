@@ -37,7 +37,12 @@ public class AuthController {
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountContext.getAccount(), null,accountContext.getAuthorities());
         System.out.println("authentication ==" + authenticationToken);
+
+        //세션저장
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
         String jwt = tokenProvider.createToken(authenticationToken);
+
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
