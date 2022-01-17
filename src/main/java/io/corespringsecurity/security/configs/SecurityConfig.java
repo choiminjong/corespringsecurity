@@ -2,14 +2,17 @@ package io.corespringsecurity.security.configs;
 
 import io.corespringsecurity.security.common.FormWebAuthenticationDetailsSource;
 import io.corespringsecurity.security.factory.UrlResourcesMapFactoryBean;
+import io.corespringsecurity.security.filter.AjaxLoginProcessingFilter;
 import io.corespringsecurity.security.filter.AuthAPIProcessingFilter;
 import io.corespringsecurity.security.filter.PermitAllFilter;
 import io.corespringsecurity.security.handler.*;
 import io.corespringsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import io.corespringsecurity.security.provider.AjaxAuthenticationProvider;
 import io.corespringsecurity.security.provider.CustomAuthenticationProvider;
+import io.corespringsecurity.security.provider.FormAuthenticationProvider;
 import io.corespringsecurity.security.voter.IpAddressVoter;
 import io.corespringsecurity.service.SecurityResourceService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -17,17 +20,24 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
+import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -38,11 +48,15 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.Filter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Configuration
 @EnableWebSecurity
+@Order(1)
 //@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -59,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private SecurityResourceService securityResourceService;
 
     //인가처리되지않도록 설정
-    private String[] permitAllResources={"/","/login","/login2","/user/login/**"};
+    private String[] permitAllResources={"/","/login","/user/login/**"};
 
 
     @Override
@@ -110,44 +124,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //ajaxConfigurer(http);
     }
 
-
-//    @Override
-//    protected void configure(final HttpSecurity http) throws Exception {
-//        http
-//                .httpBasic().disable()
-//
-//                .authorizeRequests(
-//                        authorize -> authorize.anyRequest()
-//                                .authenticated()
-//                )
-//
-//                // REST API 기반의 처리 필터를 UsernamePasswordAuthenticationFilter의 앞에 추가합니다.
-//                .addFilterBefore(authAPIProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class);
-//
-//        http.csrf().disable()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//    }
-
-
     //필터등록
-//    @Bean
-//    public AuthAPIProcessingFilter authAPIProcessingFilter() throws Exception {
-//        AuthAPIProcessingFilter filter = new AuthAPIProcessingFilter();
-//        filter.setAuthenticationManager(authenticationManagerBean());
-//        return filter;
-//    }
-
     @Bean
     public AuthAPIProcessingFilter authAPIProcessingFilter() throws Exception {
         AuthAPIProcessingFilter filter = new AuthAPIProcessingFilter();
         filter.setAuthenticationManager(authenticationManagerBean());
-        // 해당 인증 처리 필터가 다음과 같은 인증 처리, 실패 핸들러를 사용 할 것임을 명시합니다.
-        filter.setAuthenticationSuccessHandler(ajaxAuthenticationSuccessHandler());
-        filter.setAuthenticationFailureHandler(ajaxAuthenticationFailureHandler());
         return filter;
     }
-
 
 //    private void ajaxConfigurer(HttpSecurity http) throws Exception {
 //        http

@@ -48,6 +48,7 @@ public class AuthAPIProcessingFilter extends AbstractAuthenticationProcessingFil
                 String[] splitCount= decodedAuthCount.split(":");
 
                 //AccountDto accountDto = objectMapper.readValue(request.getReader(), AccountDto.class);
+
                 AccountDto accountDto = new AccountDto();
                 accountDto.setUsername(splitCount[0]);
                 accountDto.setPassword(splitCount[1]);
