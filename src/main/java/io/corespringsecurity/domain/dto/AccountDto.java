@@ -29,25 +29,6 @@ public class AccountDto implements Serializable {
     private String password;
     private List<String> roles;
 
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-//    }
-
-//    private Set<AuthorityDto> authorityDtoSet;
-
-//    //JWT account 및 Role 권한 빌드
-//    public static AccountDto from(Account account) {
-//        if(account == null) return null;
-//
-//        return AccountDto.builder()
-//                .username(account.getUsername())
-//                .email(account.getEmail())
-//                .authorityDtoSet(account.getUserRoles().stream()
-//                        .map(authority -> AuthorityDto.builder().authorityName(authority.getRoleName()).build())
-//                        .collect(Collectors.toSet()))
-//                .build();
-//    }
-
     private Set<RoleDto> roleDtoSet;
 
     //JWT account 및 Role 권한 빌드
