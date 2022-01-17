@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private TokenProvider tokenProvider;
 
     //인가처리되지않도록 설정
-    private String[] permitAllResources={"/","/login","/user/login/**"};
+    private String[] permitAllResources={"/","/login","/user/login/**","/api/authenticate","/api/check"};
 
 
     @Override
@@ -83,6 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
                 .anyRequest().authenticated()
        .and()
@@ -102,9 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class)
         ;
-
     }
-
 
     //JWT 필터등록
     @Bean
@@ -112,7 +111,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         JwtFilter filter = new JwtFilter(tokenProvider);
         return filter;
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
