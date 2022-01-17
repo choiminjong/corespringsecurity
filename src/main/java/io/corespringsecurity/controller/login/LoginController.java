@@ -26,6 +26,14 @@ public class LoginController {
         System.out.println("map  " + map);
         return map;
     }
+    @ResponseBody
+    @RequestMapping(value="/login2")
+    public HashMap<String, Object> test3() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("abc", "ddd");
+        System.out.println("map  " + map);
+        return map;
+    }
 
 
     @RequestMapping(value="/login")

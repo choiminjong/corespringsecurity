@@ -37,6 +37,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         AccountContext accountContext =(AccountContext)userDetailsService.loadUserByUsername(username);
 
+        //System.out.println("accountContext == " + accountContext);
+        //accountContext == io.corespringsecurity.security.service.AccountContext
+        // [Username=admin, Password=[PROTECTED], Enabled=true, AccountNonExpired=true, credentialsNonExpired=true,
+        // AccountNonLocked=true, Granted Authorities=[ROLE_ADMIN, ROLE_MANAGER, ROLE_USER]]
+
+        //System.out.println("accountContext.getAuthorities(); == " + accountContext.getAuthorities());
+        //accountContext.getAuthorities(); == [ROLE_ADMIN, ROLE_MANAGER, ROLE_USER]
+
+
         if(!passwordEncoder.matches(password, accountContext.getAccount().getPassword())){
             System.out.println("BadCredentialsException");
             throw new BadCredentialsException("BadCredentialsException");
@@ -46,6 +55,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if (secretKey == null || !secretKey.equals("secret")) {
             throw new InsufficientAuthenticationException("Invalid Secret");
         }
+
+        //System.out.println("accountContext.getAuthorities() == " + accountContext.getAuthorities());
+        //accountContext.getAuthorities() == [ROLE_ADMIN, ROLE_MANAGER, ROLE_USER]
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(accountContext.getAccount(), null,accountContext.getAuthorities());
 
