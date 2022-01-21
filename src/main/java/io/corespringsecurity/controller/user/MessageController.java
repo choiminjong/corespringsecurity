@@ -11,11 +11,4 @@ public class MessageController {
     public String messages() throws Exception {
         return "user/messages";
     }
-
-    @GetMapping(value = "/api/messages")
-    @ResponseBody
-    public String apiMessages() {
-        return "messages OK";
-    }
-
 }
