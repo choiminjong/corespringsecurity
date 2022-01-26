@@ -1,5 +1,6 @@
 package io.corespringsecurity.security.metadatasource;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -13,10 +14,10 @@ import java.util.*;
 public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
     private LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap = new LinkedHashMap<>();
-
-    public UrlFilterInvocationSecurityMetadataSource(LinkedHashMap<RequestMatcher, List<ConfigAttribute>> resourcesMap) {
-        this.requestMap = resourcesMap;
-    }
+//
+//    public UrlFilterInvocationSecurityMetadataSource(LinkedHashMap<RequestMatcher, List<ConfigAttribute>> resourcesMap) {
+//        this.requestMap = resourcesMap;
+//    }
 
     @Override
     //권한추출하는 로직
@@ -28,6 +29,7 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
         requestMap.put(new AntPathRequestMatcher("/mypage"), Arrays.asList(new SecurityConfig("ROLE_USER")));
 
         if(requestMap != null){
+            System.out.println("requestMap == " + requestMap);
             for(Map.Entry<RequestMatcher, List<ConfigAttribute>> entry : requestMap.entrySet()){
                 RequestMatcher matcher = entry.getKey();
                 if(matcher.matches(request)){

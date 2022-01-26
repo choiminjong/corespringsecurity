@@ -120,20 +120,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private List<AccessDecisionVoter<?>> getAccessDecistionVoters() {
+
         return Arrays.asList(new RoleVoter());
     }
-
 
     //FilterInvocationSecurityMetadataSource DB데이터를 불러와서 인가처리를 진행할 수 있도록 진행한다.
     @Bean
     public FilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource() throws Exception {
-        return new UrlFilterInvocationSecurityMetadataSource(urlResourcesMapFactoryBean().getObject());
+        return new UrlFilterInvocationSecurityMetadataSource();
 
     }
 
-    private UrlResourcesMapFactoryBean urlResourcesMapFactoryBean() {
-        UrlResourcesMapFactoryBean urlResourcesMapFactoryBean = new UrlResourcesMapFactoryBean();
-        urlResourcesMapFactoryBean.setSecurityResourceService(securityResourceService);
-        return urlResourcesMapFactoryBean;
-    }
+//    //FilterInvocationSecurityMetadataSource DB데이터를 불러와서 인가처리를 진행할 수 있도록 진행한다.
+//    @Bean
+//    public FilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource() throws Exception {
+//        return new UrlFilterInvocationSecurityMetadataSource(urlResourcesMapFactoryBean().getObject());
+//
+//    }
+//
+//    //urlResourcesMapFactoryBean url 데이터를 리턴받는다.
+//    private UrlResourcesMapFactoryBean urlResourcesMapFactoryBean() {
+//        UrlResourcesMapFactoryBean urlResourcesMapFactoryBean = new UrlResourcesMapFactoryBean();
+//        urlResourcesMapFactoryBean.setSecurityResourceService(securityResourceService);
+//        return urlResourcesMapFactoryBean;
+//    }
 }
