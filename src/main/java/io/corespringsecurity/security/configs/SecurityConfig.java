@@ -7,6 +7,7 @@ import io.corespringsecurity.security.handler.CustomAuthenticationFailureHandler
 import io.corespringsecurity.security.handler.CustomAuthenticationSuccessHandler;
 import io.corespringsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import io.corespringsecurity.security.provider.CustomAuthenticationProvider;
+import io.corespringsecurity.security.voter.IpAddressVoter;
 import io.corespringsecurity.service.SecurityResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -50,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private SecurityResourceService securityResourceService;
 
     //인가처리되지않도록 설정
-    private String[] permitAllResources={"/","/login","/admin/**"};
+    private String[] permitAllResources={"/","/login"};
 
 
     @Override
@@ -129,8 +130,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private List<AccessDecisionVoter<?>> getAccessDecistionVoters() {
         //return Arrays.asList(new RoleVoter());
+
+        //IpAddressVoter ipAddressVoter = new IpAddressVoter();
         List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
+        //accessDecisionVoters.add(ipAddressVoter);
         accessDecisionVoters.add(roleVoter());
+
         return accessDecisionVoters;
     }
 

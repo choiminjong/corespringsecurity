@@ -1,6 +1,7 @@
 package io.corespringsecurity.service;
 
 import io.corespringsecurity.domain.entity.Resources;
+import io.corespringsecurity.repository.AccessIpRepository;
 import io.corespringsecurity.repository.ResourcesRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -20,6 +22,9 @@ public class SecurityResourceService {
 
     @Autowired
     private ResourcesRepository resourcesRepository;
+
+    @Autowired
+    private AccessIpRepository accessIpRepository;
 
     public SecurityResourceService(ResourcesRepository resourcesRepository) {
         this.resourcesRepository = resourcesRepository;
@@ -43,5 +48,11 @@ public class SecurityResourceService {
         });
 
         return result;
+    }
+    public List<String> getAccessIpList() {
+
+        List<String> accessIpList = accessIpRepository.findAll().stream().map(accessIp -> accessIp.getIpAddress()).collect(Collectors.toList());
+
+        return accessIpList;
     }
 }
