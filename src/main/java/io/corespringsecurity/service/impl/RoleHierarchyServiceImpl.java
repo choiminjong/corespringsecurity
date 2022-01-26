@@ -34,6 +34,5 @@ public class RoleHierarchyServiceImpl implements RoleHierarchyService {
             }
         }
         return concatedRoles.toString();
-
     }
 }

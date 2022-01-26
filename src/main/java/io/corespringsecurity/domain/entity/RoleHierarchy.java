@@ -32,5 +32,4 @@ public class RoleHierarchy implements Serializable {
 
     @OneToMany(mappedBy = "parentName", cascade={CascadeType.ALL})
     private Set<RoleHierarchy> roleHierarchy = new HashSet<RoleHierarchy>();
-
 }

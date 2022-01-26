@@ -158,4 +158,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         urlResourcesMapFactoryBean.setSecurityResourceService(securityResourceService);
         return urlResourcesMapFactoryBean;
     }
+
 }

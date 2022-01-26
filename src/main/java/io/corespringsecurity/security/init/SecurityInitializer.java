@@ -28,4 +28,5 @@ public class SecurityInitializer implements ApplicationRunner {
         System.out.println("Init allHierarchy == " + allHierarchy);
         roleHierarchy.setHierarchy(allHierarchy);
     }
+
 }
