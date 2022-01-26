@@ -1,6 +1,7 @@
 package io.corespringsecurity.security.configs;
 
 import io.corespringsecurity.security.factory.UrlResourcesMapFactoryBean;
+import io.corespringsecurity.security.filter.PermitAllFilter;
 import io.corespringsecurity.security.handler.CustomAccessDeniedHandler;
 import io.corespringsecurity.security.handler.CustomAuthenticationFailureHandler;
 import io.corespringsecurity.security.handler.CustomAuthenticationSuccessHandler;
@@ -44,6 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private SecurityResourceService securityResourceService;
+
+    //인가처리되지않도록 설정
+    private String[] permitAllResources={"/","/login","/admin/**"};
 
 
     @Override
@@ -105,12 +109,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     //인가(url 권한 검토)처리 필터 생성
     public FilterSecurityInterceptor customFilterSecurityInterceptor() throws Exception {
-        FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
-        filterSecurityInterceptor.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource());
+        //FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
+        PermitAllFilter permitAllFilter = new PermitAllFilter(permitAllResources);
+        permitAllFilter.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource());
         //승인 인가처리 방식
-        filterSecurityInterceptor.setAccessDecisionManager(affirmativeBased());
-        filterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean());
-        return filterSecurityInterceptor;
+        permitAllFilter.setAccessDecisionManager(affirmativeBased());
+        permitAllFilter.setAuthenticationManager(authenticationManagerBean());
+        return permitAllFilter;
     }
 
     //여러 Voter중에 하나라도 허용되면 허용된다. (기본 전략)
