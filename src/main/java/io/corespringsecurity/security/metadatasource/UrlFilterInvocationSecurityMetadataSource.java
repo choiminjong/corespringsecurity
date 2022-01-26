@@ -1,6 +1,8 @@
 package io.corespringsecurity.security.metadatasource;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import io.corespringsecurity.service.SecurityResourceService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -13,11 +15,14 @@ import java.util.*;
 
 public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
+    @Autowired
+    private SecurityResourceService securityResourceService;
+
     private LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap = new LinkedHashMap<>();
-//
-//    public UrlFilterInvocationSecurityMetadataSource(LinkedHashMap<RequestMatcher, List<ConfigAttribute>> resourcesMap) {
-//        this.requestMap = resourcesMap;
-//    }
+
+    public UrlFilterInvocationSecurityMetadataSource(LinkedHashMap<RequestMatcher, List<ConfigAttribute>> resourcesMap) {
+        this.requestMap = resourcesMap;
+    }
 
     @Override
     //권한추출하는 로직
@@ -26,10 +31,9 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
         HttpServletRequest request = ((FilterInvocation) object).getRequest();
 
         //수동으로 데이터 추가 테스트
-        requestMap.put(new AntPathRequestMatcher("/mypage"), Arrays.asList(new SecurityConfig("ROLE_USER")));
+        //requestMap.put(new AntPathRequestMatcher("/mypage"), Arrays.asList(new SecurityConfig("ROLE_USER")));
 
         if(requestMap != null){
-            System.out.println("requestMap == " + requestMap);
             for(Map.Entry<RequestMatcher, List<ConfigAttribute>> entry : requestMap.entrySet()){
                 RequestMatcher matcher = entry.getKey();
                 if(matcher.matches(request)){
@@ -51,6 +55,20 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
         }
 
         return allAttributes;
+    }
+
+    public void reload() throws Exception {
+
+        LinkedHashMap<RequestMatcher, List<ConfigAttribute>> reloadedMap = securityResourceService.getResourceList();
+        Iterator<Map.Entry<RequestMatcher, List<ConfigAttribute>>> iterator = reloadedMap.entrySet().iterator();
+        requestMap.clear();
+
+        while (iterator.hasNext()) {
+            Map.Entry<RequestMatcher, List<ConfigAttribute>> entry = iterator.next();
+
+            requestMap.put(entry.getKey(), entry.getValue());
+        }
+        System.out.println("requestMap reload == " + requestMap);
     }
 
     @Override

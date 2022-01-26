@@ -18,6 +18,7 @@ import java.util.List;
 @Service
 public class SecurityResourceService {
 
+    @Autowired
     private ResourcesRepository resourcesRepository;
 
     public SecurityResourceService(ResourcesRepository resourcesRepository) {
