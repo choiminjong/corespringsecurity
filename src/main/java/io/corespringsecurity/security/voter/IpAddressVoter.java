@@ -7,13 +7,19 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
 
-public class IpAddressVoter implements AccessDecisionVoter<Object> {
+public class IpAddressVoter  implements AccessDecisionVoter<Object> {
+
     @Autowired
     private SecurityResourceService securityResourceService;
+
+    public IpAddressVoter(SecurityResourceService securityResourceService) {
+        this.securityResourceService = securityResourceService;
+    }
 
     @Override
     public boolean supports(ConfigAttribute attribute) {
@@ -35,10 +41,8 @@ public class IpAddressVoter implements AccessDecisionVoter<Object> {
         //사용자의 정보를 알 수 있다. IP등등 details
         WebAuthenticationDetails details = (WebAuthenticationDetails)authentication.getDetails();
         String remoteAddress = details.getRemoteAddress();
-        System.out.println("remoteAddress = " + remoteAddress);
-
         List<String> accessIpList = securityResourceService.getAccessIpList();
-        System.out.println("accessIpList = " + accessIpList);
+
         int result = ACCESS_DENIED; // 허용되지 않음
 
         for(String ipAddress : accessIpList){

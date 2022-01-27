@@ -5,7 +5,7 @@ import io.corespringsecurity.security.filter.PermitAllFilter;
 import io.corespringsecurity.security.handler.CustomAccessDeniedHandler;
 import io.corespringsecurity.security.handler.CustomAuthenticationFailureHandler;
 import io.corespringsecurity.security.handler.CustomAuthenticationSuccessHandler;
-import io.corespringsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
+import io.corespringsecurity.security.metadatasource.UrlSecurityMetadataSource;
 import io.corespringsecurity.security.provider.CustomAuthenticationProvider;
 import io.corespringsecurity.security.voter.IpAddressVoter;
 import io.corespringsecurity.service.SecurityResourceService;
@@ -18,7 +18,6 @@ import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
-import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -103,6 +102,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new CustomAuthenticationProvider(passwordEncoder());
     }
 
+
     @Bean
     public AccessDeniedHandler accessDeniedHandler(){
         CustomAccessDeniedHandler customAccessDeniedHandler = new CustomAccessDeniedHandler();
@@ -115,7 +115,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public FilterSecurityInterceptor customFilterSecurityInterceptor() throws Exception {
         //FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
         PermitAllFilter permitAllFilter = new PermitAllFilter(permitAllResources);
-        permitAllFilter.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource());
+        permitAllFilter.setSecurityMetadataSource(urlSecurityMetadataSource());
         //승인 인가처리 방식
         permitAllFilter.setAccessDecisionManager(affirmativeBased());
         permitAllFilter.setAuthenticationManager(authenticationManagerBean());
@@ -131,12 +131,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private List<AccessDecisionVoter<?>> getAccessDecistionVoters() {
         //return Arrays.asList(new RoleVoter());
 
-        //IpAddressVoter ipAddressVoter = new IpAddressVoter();
-        List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
-        //accessDecisionVoters.add(ipAddressVoter);
-        accessDecisionVoters.add(roleVoter());
+        IpAddressVoter ipAddressVoter = new IpAddressVoter(securityResourceService);
+        //List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
+        List<AccessDecisionVoter<? extends Object>> accessDecisionVoterList = Arrays.asList(ipAddressVoter, roleVoter());
+       // accessDecisionVoters.add(ipAddressVoter);
+        //accessDecisionVoters.add(roleVoter());
 
-        return accessDecisionVoters;
+        return accessDecisionVoterList;
     }
 
     @Bean
@@ -153,8 +154,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     //FilterInvocationSecurityMetadataSource DB데이터를 불러와서 인가처리를 진행할 수 있도록 진행한다.
     @Bean
-    public FilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource() throws Exception {
-        return new UrlFilterInvocationSecurityMetadataSource(urlResourcesMapFactoryBean().getObject());
+    public UrlSecurityMetadataSource urlSecurityMetadataSource() throws Exception {
+        return new UrlSecurityMetadataSource(urlResourcesMapFactoryBean().getObject());
     }
 
     //urlResourcesMapFactoryBean url 데이터를 리턴받는다.
