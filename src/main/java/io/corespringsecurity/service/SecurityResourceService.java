@@ -41,18 +41,39 @@ public class SecurityResourceService {
             re.getRoleSet().forEach(role ->{
                 // configAttributeList 구현체 기준으로 객체를 Role 계속 추가한다.
                 configAttributeList.add(new SecurityConfig(role.getRoleName()));
-                //LinkedHashMap<RequestMatcher, List<ConfigAttribute>>  해당포맷으로 추가한다.
-                result.put(new AntPathRequestMatcher(re.getResourceName()),configAttributeList);
             });
-
+            //LinkedHashMap<RequestMatcher, List<ConfigAttribute>>  해당포맷으로 추가한다.
+            result.put(new AntPathRequestMatcher(re.getResourceName()),configAttributeList);
         });
 
         return result;
     }
+
+    //권한과 자원정보를 가져온다.
+    public LinkedHashMap<String, List<ConfigAttribute>> getMethodResourceList() {
+
+        LinkedHashMap<String, List<ConfigAttribute>> result = new LinkedHashMap<>();
+
+        List<Resources> resourcesList = resourcesRepository.findAllMethodResources();
+        System.out.println("resourcesList = " + resourcesList);
+        resourcesList.forEach(re -> {
+            List<ConfigAttribute> configAttributeList = new ArrayList<>();
+            re.getRoleSet().forEach(role ->{
+                // configAttributeList 구현체 기준으로 객체를 Role 계속 추가한다.
+                configAttributeList.add(new SecurityConfig(role.getRoleName()));
+            });
+            result.put(re.getResourceName(),configAttributeList);
+        });
+        System.out.println("resourcesList result = " + result);
+        return result;
+    }
+
     public List<String> getAccessIpList() {
 
         List<String> accessIpList = accessIpRepository.findAll().stream().map(accessIp -> accessIp.getIpAddress()).collect(Collectors.toList());
 
         return accessIpList;
     }
+
+
 }
