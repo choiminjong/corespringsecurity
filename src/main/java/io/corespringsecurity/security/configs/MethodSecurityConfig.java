@@ -8,8 +8,9 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 @Configuration
-@EnableGlobalMethodSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
+
     //MAP 메소드
     @Override
     protected MethodSecurityMetadataSource customMethodSecurityMetadataSource() {
