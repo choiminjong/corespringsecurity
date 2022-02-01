@@ -35,14 +35,15 @@ public class UrlSecurityMetadataSource implements FilterInvocationSecurityMetada
         //requestMap.put(new AntPathRequestMatcher("/mypage"), Arrays.asList(new SecurityConfig("ROLE_USER")));
 
         if(requestMap != null){
+            System.out.println("requestMap == " + requestMap);
             for(Map.Entry<RequestMatcher, List<ConfigAttribute>> entry : requestMap.entrySet()){
                 RequestMatcher matcher = entry.getKey();
                 if(matcher.matches(request)){
                     return entry.getValue();
                 }
             }
-        }
 
+        }
         return null;
     }
 

@@ -5,6 +5,8 @@ import io.corespringsecurity.domain.dto.AccountDto;
 import io.corespringsecurity.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +23,14 @@ public class UserController {
 
     @GetMapping(value="/mypage")
     public String myPage() throws Exception {
+        return "user/mypage";
+    }
 
+    @GetMapping(value="/order")
+    public String order(){
         userService.order();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("authentication = " + authentication);
         return "user/mypage";
     }
 

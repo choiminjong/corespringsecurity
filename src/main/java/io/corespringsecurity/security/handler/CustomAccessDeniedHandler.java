@@ -19,12 +19,11 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-
         //String denieUrl = errorPage + "?exception="+accessDeniedException.getMessage();
         //response.sendRedirect(denieUrl);
 
         String deniedUrl = errorPage + "?exception=" + URLEncoder.encode(accessDeniedException.getMessage(),"UTF-8");
-        System.out.println("deniedUrl = " + deniedUrl);
+        //System.out.println("deniedUrl = " + deniedUrl);
         redirectStrategy.sendRedirect(request, response, deniedUrl);
 
     }
