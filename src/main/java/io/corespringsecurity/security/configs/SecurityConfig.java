@@ -73,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
+                //.antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
        .and()
                 .formLogin()
@@ -134,7 +134,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         IpAddressVoter ipAddressVoter = new IpAddressVoter(securityResourceService);
         //List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
-        List<AccessDecisionVoter<? extends Object>> accessDecisionVoterList = Arrays.asList(ipAddressVoter, roleVoter());
+        List<AccessDecisionVoter<? extends Object>> accessDecisionVoterList = Arrays.asList(/*ipAddressVoter,*/ roleVoter());
        // accessDecisionVoters.add(ipAddressVoter);
         //accessDecisionVoters.add(roleVoter());
 
