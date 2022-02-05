@@ -26,9 +26,11 @@ public class MethodResourcesMapFactoryBean implements FactoryBean<LinkedHashMap<
     private LinkedHashMap<String, List<ConfigAttribute>> resourcesMap;
 
     public void init() {
-        //if ("method".equals(resourceType)) {
+        if ("method".equals(resourceType)) {
             resourcesMap = securityResourceService.getMethodResourceList();
-        //}
+        }else if("pointcut".equals((resourceType))){
+            resourcesMap = securityResourceService.getPointcutResourceList();
+        }
     }
 
     public LinkedHashMap<String, List<ConfigAttribute>> getObject() {
